@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Shyalan.exe</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initiale=1">
+        <meta name="author" content="Shyalan Ramesh">
+        <meta name="keywords" content="shyalan, portfolio, ramesh, shyalan ramesh">
+        <meta name="description" content="Shyalan's Personal Portfolio">
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="icon" type="image/png" href="img/favicon.png">
+    </head>
+
+    <body>
+
+        <!-- BG Video Start-->
+        <video autoplay muted loop>
+            <source src="video/bg.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <!-- BG Video End-->
+
+        <!--Cursor Start-->
+        <div class="cursor">
+            <script>
+                const cursor = document.querySelector('.cursor');
+
+                document.addEventListener('mousemove', e => {
+                    cursor.setAttribute("style", "top: "+(e.pageY - 10)+"px; left: "+(e.pageX - 10)+"px;")
+                })
+
+                document.addEventListener('click', () => {
+                    cursor.classList.add("expand");
+
+                    setTimeout(() => {
+                        cursor.classList.remove("expand");
+                    }, 500)
+                })
+            </script>
+        </div>
+        <!--Cursor End-->
+
+        <!-- Main Start-->
+        <div class="main">
+        
+            <!--Home Page Start-->
+            <section class="home-section align-items-center">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="home-text">
+                            <p>Hello, I'm</p>
+                            <h1>Shyalan Ramesh</h1>
+                            <h2>Web Developer, Editor, Graphic & Motion Graphics</h2>
+                            <a href="#" class="btn"> about me </a>
+                            <a href="#" class="btn"> portfolio </a>
+                        </div>
+                        <div class="home-img">
+                            <div class="img-box">
+                                <a href="https://www.instagram.com/shyalanr">
+                                    <img src="img/profile.png" alt="profile Picture">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--Home Page End-->
+
+        </div>
+
+    <script href="js/script.js"></script>
+
+    </body>
+
+</html>
