@@ -987,6 +987,7 @@ button{
     .portfolio-item{
         width: calc(50% - 30px);
     }
+
 }
 
 @media(max-width:767px){
@@ -1018,6 +1019,7 @@ button{
     .contact-info-item{
         padding: 0;
     }
+
 }
 
 @media(max-width:575px){
@@ -1038,4 +1040,22 @@ button{
     .pp-header h3{
         font-size: 20px;
     }
+
+}
+
+footer{
+    line-height: 1.5;
+    background-color: none;
+    margin-top: 20px;
+    color: white;
+    font-weight: 500;
+    text-transform: capitalize;
+    font-family: inherit;
+    font-size: 16px;
+    user-select: none;
+    position: relative ;
+    overflow: hidden;
+    vertical-align: middle;
+    padding: 0px 45%;
+    padding-top: 20px;
 }
