@@ -1,179 +1,99 @@
-// Imagination by @neave
+window.addEventListener("load", () =>{
+	document.querySelector(".main").classList.remove("hidden");
+	document.querySelector(".home-section").classList.add("active");
+	/* ------- Page Loader ------ */
+	document.querySelector(".page-loader").classList.add("fade-out");
+	setTimeout(() => {
+		document.querySelector(".page-loader").style.display = "none";
+	},600);
+});
 
-window.requestAnimationFrame =
-	window.requestAnimationFrame ||
-	window.webkitRequestAnimationFrame ||
-	window.mozRequestAnimationFrame ||
-	window.msRequestAnimationFrame ||
-	function(callback) {
-		setTimeout(callback, 1000 / 60);
-	};
+/*--- Toggle Navbar ---*/
 
-var get = document.querySelector.bind(document),
-	on = document.addEventListener.bind(document),
-	context,
-	canvas,
-	mouseX,
-	mouseY,
-	px,
-	py,
-	points = [],
-	size = 0,
-	red = 0,
-	green = 255,
-	blue = 255,
-	spread,
-	SPEED_X = 0.15,
-	SPEED_Y = 0.15,
-	MAX_LENGTH = 120,
-	RED_STEP = 0.02,
-	GREEN_STEP = 0.015,
-	BLUE_STEP = 0.025;
+const navToggler = document.querySelector(".nav-toggler");
+navToggler.addEventListener("click", () =>{
+	hideSection();
+	toggleNavbar();
+	document.body.classList.toggle("hide-scrolling"); I
+});
 
-function Point(x, y, dx, dy, size, color) {
-	this.x = x;
-	this.y = y;
-	this.dx = dx;
-	this.dy = dy;
-	this.size = size;
-	this.color = color;
+function hideSection(){
+	document.querySelector("section.active").classList.toggle("fade-out");
 }
 
-Point.prototype.spread = function() {
-	this.x += this.dx;
-	this.y += this.dy;
-};
+function toggleNavbar(){
+	document.querySelector(".header").classList.toggle("active");
+}
 
-function drawLines() {
-	var p0,
-		p1,
-		p2,
-		total = points.length;
+/*--- About Tabs ---*/
 
-	for (var i = total - 1; i > 1; i--) {
-		p0 = points[i];
-		p1 = points[i - 1];
-		p2 = points[i - 2];
+const tabsContainer = document.querySelector(".about-tabs"),
+aboutSection = document.querySelector(".about-section");
 
-		context.beginPath();
-		context.strokeStyle = p0.color;
-		context.lineWidth = p0.size;
-		context.globalAlpha = i / total;
-		context.moveTo((p1.x + p0.x) / 2, (p1.y + p0.y) / 2);
-		context.quadraticCurveTo(p1.x, p1.y, (p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
-
-		context.stroke();
-
-		p0.spread();
+tabsContainer.addEventListener("click", (e) =>{
+	if(e.target.classList.contains("tab-item") && !e.target.classList.contains("active")){
+		tabsContainer.querySelector(".active"). classList.remove("active");
+		e.target.classList.add("active");
+		const target = e.target.getAttribute("data-target");
+		aboutSection.querySelector(".tab-content.active").classList.remove("active");
+		aboutSection.querySelector(target).classList.add("active");
 	}
+});
 
-	points[0].spread();
-	points[total - 1].spread();
-}
+/*--- Active Section ---*/
 
-function draw() {
-	// Line movement
-	var dx = (mouseX - px) * SPEED_X,
-		dy = (mouseY - py) * SPEED_Y;
-
-	// Limit the amount of movement
-	if (dx < -spread) {
-		dx = -spread;
-	} else if (dx > spread) {
-		dx = spread;
+document.addEventListener("click", (e) =>{
+	if(e.target.classList.contains("link-item") && e.target.hash !== ""){
+		navToggler.classList.add("hide");
+		if(e.target.classList.contains("nav-item")){
+			toggleNavbar();
+		}
+		else{
+			hideSection();
+			document.body.classList.add("hide-scrolling");
+		}
+		setTimeout(() =>{
+			document.querySelector("section.active").classList.remove("active","fade-out");
+			document.querySelector(e.target.hash) .classList.add("active");
+			window.scrollTo(0,0);
+			document.body.classList.remove("hide-scrolling");
+			navToggler.classList.remove("hide");
+			document.querySelector(".overlay"). classList.remove("active");
+	  	},500);
 	}
+})
+/*--- Portfolio Item Details Popup ---*/
 
-	if (dy < -spread) {
-		dy = -spread;
-	} else if (dy > spread) {
-		dy = spread;
+document.addEventListener("click", (e) =>{
+	if(e.target.classList.contains("view-project-btn")){
+	togglePortfolioPopup();
+	portfolioItemDetails(e.target.parentElement);
+	document.querySelector(".portfolio-popup").scrollTo(0,0)
+	portfolioItemDetails();
 	}
-
-	// Store the mouse position
-	px = mouseX;
-	py = mouseY;
-
-	// Create a new point on the line
-	points.push(new Point(
-		px, py,
-		dx, dy,
-		Math.abs(Math.sin(size += 0.125) * 10) + 1,
-		'rgb(' +
-			(Math.floor(Math.sin(red += RED_STEP) * 128 + 128)) + ',' +
-			(Math.floor(Math.sin(green += GREEN_STEP) * 128 + 128)) + ',' +
-			(Math.floor(Math.sin(blue += BLUE_STEP) * 128 + 128)) + ')'
-	));
-
-	// Remove the last point from the list if we've reached the maximum length
-	if (points.length > MAX_LENGTH) points.shift();
-
-	// Fade out
-	context.globalCompositeOperation = 'source-over';
-	context.globalAlpha = 1;
-	context.fillStyle = 'rgba(0, 0, 0, 0.05)';
-	context.fillRect(0, 0, canvas.width, canvas.height);
-
-	// Draw the lines
-	context.globalCompositeOperation = 'lighter';
-	drawLines();
-	drawLines();
-	drawLines();
+})
+	function togglePortfolioPopup(){
+	document.querySelector(".portfolio-popup").classList.toggle("open");
+	document.body.classList.toggle("hide-scrolling");
+	document.querySelector(".main").classList.toggle("fade-out");
+	document.querySelector(".pp-close").addEventListener("click", togglePortfolioPopup);
 }
 
-function update() {
-	requestAnimationFrame(update);
-	draw();
+// hide popup when clicking outside of it
+
+document.addEventListener("click", (e)=>{
+	if(e.target.classList.contains("pp-inner")){
+		togglePortfolioPopup();
+	}
+});
+
+function portfolioItemDetails(portfolioItem){
+	document.querySelector(".pp-thumbnail img").src =
+	portfolioItem.querySelector(".portfolio-item-thumbnail img").src;
+
+	document.querySelector(".pp-header h3").innerHTML =
+	portfolioItem.querySelector(".portfolio-item-title").innerHTML;
+
+	document.querySelector(".pp-body"). innerHTML =
+	portfolioItem.querySelector(".portfolio-item-details").innerHTML;
 }
-
-function resize() {
-	canvas.width = innerWidth;
-	canvas.height = innerHeight;
-}
-
-function init() {
-	canvas = get('canvas');
-	context = canvas.getContext('2d');
-
-	canvas.onmousemove = function(event) {
-		mouseX = event.pageX;
-		mouseY = event.pageY;
-	};
-
-	document.onmouseenter = function(event) {
-		mouseX = event.pageX;
-		mouseY = event.pageY;
-		for (var i = points.length; i--; ) {
-			points[i].x = mouseX;
-			points[i].y = mouseY;
-		}
-	};
-
-	canvas.ontouchmove = function(event) {
-		mouseX = event.targetTouches[0].pageX;
-		mouseY = event.targetTouches[0].pageY;
-		spread = 1;
-	};
-
-	canvas.ontouchstart = function(event) {
-		spread = 0;
-		mouseX = event.targetTouches[0].pageX;
-		mouseY = event.targetTouches[0].pageY;
-		for (var i = points.length; i--; ) {
-			points[i].x = mouseX;
-			points[i].y = mouseY;
-		}
-		if (!event.target.href) {
-			event.preventDefault();
-		}
-	};
-
-	window.onresize = resize;
-	resize();
-
-	mouseX = canvas.width / 2;
-	mouseY = canvas.height / 2;
-
-	update();
-}
-
-on('DOMContentLoaded', init);
